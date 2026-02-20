@@ -1,3 +1,246 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   THE OBSERVATORY — Global Styles
+   index.css
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* ── Google Font imports ───────────────────────────────────────────────────── */
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ── CSS Custom Properties (Observatory tokens) ────────────────────────────── */
+:root {
+  --color-void: #08090e;
+  --color-dusk: #101220;
+  --color-surface: #181b2d;
+  --color-mist: #242842;
+  --color-rim: #343858;
+  --color-dim: #8a8399;
+  --color-pale: #c4bcb0;
+  --color-light: #e8e2d6;
+  --color-gold: #c8924a;
+  --color-glow: #7c6faa;
+  --color-dawn: #c46f60;
+  --color-gleam: #d4b483;
+
+  --radius-sm: 4px;
+  --radius: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ── Base reset + defaults ─────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-dusk);
+  color: var(--color-pale);
+  font-family: "Outfit", sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+/* ── Typography base ────────────────────────────────────────────────────────── */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  color: var(--color-light);
+  line-height: 1.2;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+code,
+pre,
+kbd,
+samp {
+  font-family: "DM Mono", monospace;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ── Selection colour ────────────────────────────────────────────────────────── */
+::selection {
+  background-color: rgba(200, 146, 74, 0.25);
+  color: var(--color-light);
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-void);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-mist);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-rim);
+}
+
+/* ── Observatory Component Classes ─────────────────────────────────────────── */
+@layer components {
+  /* Glass card — the signature surface */
+  .obs-card {
+    @apply bg-surface border border-rim/40 rounded-lg transition-all duration-200;
+    backdrop-filter: blur(8px);
+  }
+  .obs-card:hover {
+    @apply border-rim/80;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Primary button */
+  .obs-btn {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 rounded font-body font-medium
+           text-sm text-light bg-surface border border-rim/60
+           transition-all duration-200 cursor-pointer select-none;
+  }
+  .obs-btn:hover {
+    @apply border-gold/60 text-gold;
+    box-shadow: 0 0 16px rgba(200, 146, 74, 0.1);
+  }
+  .obs-btn-gold {
+    @apply obs-btn bg-gold/10 border-gold/40 text-gold;
+  }
+  .obs-btn-gold:hover {
+    @apply bg-gold/20 border-gold/80;
+    box-shadow: 0 0 20px rgba(200, 146, 74, 0.2);
+  }
+
+  /* Input field */
+  .obs-input {
+    @apply w-full bg-void border border-rim/60 rounded px-4 py-2.5
+           font-body text-sm text-light placeholder:text-dim
+           outline-none transition-all duration-200;
+  }
+  .obs-input:focus {
+    @apply border-gold/60;
+    box-shadow: 0 0 0 3px rgba(200, 146, 74, 0.08);
+  }
+
+  /* Section label — small uppercase tracking */
+  .obs-label {
+    @apply font-mono text-2xs uppercase tracking-[0.2em] text-dim;
+  }
+
+  /* Divider with optional label */
+  .obs-divider {
+    @apply border-t border-rim/30;
+  }
+
+  /* Result display — the "answer" */
+  .obs-result {
+    @apply font-display text-5xl text-light font-light;
+  }
+
+  /* Insight badge */
+  .obs-insight {
+    @apply text-sm text-dim italic border-l-2 border-gold/40 pl-4 py-1;
+  }
+
+  /* Nav link */
+  .nav-link {
+    @apply font-body text-sm font-medium text-dim hover:text-light
+           transition-colors duration-200 relative;
+  }
+  .nav-link.active {
+    @apply text-gold;
+  }
+}
+
+/* ── Subtle star/particle background (CSS only) ──────────────────────────────── */
+.obs-starfield {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(
+      1px 1px at 20% 30%,
+      rgba(200, 146, 74, 0.4) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1px 1px at 80% 10%,
+      rgba(255, 255, 255, 0.3) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1px 1px at 50% 60%,
+      rgba(124, 111, 170, 0.3) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1px 1px at 10% 80%,
+      rgba(255, 255, 255, 0.2) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1px 1px at 70% 50%,
+      rgba(200, 146, 74, 0.2) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1px 1px at 30% 90%,
+      rgba(255, 255, 255, 0.25) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1px 1px at 90% 70%,
+      rgba(124, 111, 170, 0.2) 0%,
+      transparent 100%
+    );
+}
+
+/* ── Gradient helpers ────────────────────────────────────────────────────────── */
+.obs-gradient-text {
+  background: linear-gradient(135deg, var(--color-gold), var(--color-gleam));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Animation delay utilities ───────────────────────────────────────────────── */
+.delay-75 {
+  animation-delay: 75ms;
+}
+.delay-150 {
+  animation-delay: 150ms;
+}
+.delay-300 {
+  animation-delay: 300ms;
+}
+.delay-500 {
+  animation-delay: 500ms;
+}
+.delay-700 {
+  animation-delay: 700ms;
+}
